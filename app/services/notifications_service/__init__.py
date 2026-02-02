@@ -1,0 +1,2 @@
+# Notifications Service - настройки уведомлений
+
