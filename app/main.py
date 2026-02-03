@@ -11,33 +11,69 @@ from app.core.config import settings
 from app.database import engine, Base
 from app.api.v1 import api_router
 from app.models import (
-    User, VerificationCode, BlacklistedToken,
-    UserExtended, UserProfile, UserFavorite,
-    UserAchievement, UserNotification, Transaction, UserStatistics,
-    Notification, NotificationReadStatus,
-    SupportTicket, SupportMessage,
-    GlobalChatMessage, UserBlock, HiddenGlobalChatMessage,
-    GasStation, FuelPrice, GasStationPhoto, Review,
-    Restaurant, MenuCategory, MenuItem, RestaurantPhoto, RestaurantReview,
-    ServiceStation, ServicePrice, ServiceStationPhoto, ServiceStationReview,
-    CarWash, CarWashService, CarWashPhoto, CarWashReview,
-    Advertisement, AdvertisementView, AdvertisementClick,
-    ElectricStation, ChargingPoint, ElectricStationPhoto, ElectricStationReview,
-    Driver, DriverDocument, Vehicle, Region,
-    DeliveryOrderStatus, DeliveryTariff, DeliveryOrder,
-    DeliveryOrderStatusHistory, UserBalanceLog,
+    User,
+    VerificationCode,
+    BlacklistedToken,
+    UserExtended,
+    UserProfile,
+    UserFavorite,
+    UserAchievement,
+    UserNotification,
+    Transaction,
+    UserStatistics,
+    Notification,
+    NotificationReadStatus,
+    SupportTicket,
+    SupportMessage,
+    GlobalChatMessage,
+    UserBlock,
+    HiddenGlobalChatMessage,
+    GasStation,
+    FuelPrice,
+    GasStationPhoto,
+    Review,
+    Restaurant,
+    MenuCategory,
+    MenuItem,
+    RestaurantPhoto,
+    RestaurantReview,
+    ServiceStation,
+    ServicePrice,
+    ServiceStationPhoto,
+    ServiceStationReview,
+    CarWash,
+    CarWashService,
+    CarWashPhoto,
+    CarWashReview,
+    Advertisement,
+    AdvertisementView,
+    AdvertisementClick,
+    ElectricStation,
+    ChargingPoint,
+    ElectricStationPhoto,
+    ElectricStationReview,
+    Driver,
+    DriverDocument,
+    Vehicle,
+    Region,
+    DeliveryOrderStatus,
+    DeliveryTariff,
+    DeliveryOrder,
+    DeliveryOrderStatusHistory,
+    UserBalanceLog,
 )
 from app.core.rate_limit import RateLimitMiddleware
 from app.core.security_middleware import (
     SecurityHeadersMiddleware,
     RequestSizeMiddleware,
-    ErrorHandlingMiddleware
+    ErrorHandlingMiddleware,
 )
+
 
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
 )
 
 Base.metadata.create_all(bind=engine)
@@ -49,6 +85,7 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
 )
+
 
 # Порядок важен! Middleware применяются в обратном порядке
 # 1. ErrorHandlingMiddleware - последний, обрабатывает все ошибки
@@ -65,7 +102,9 @@ if settings.RATE_LIMIT_ENABLED:
     app.add_middleware(RateLimitMiddleware)
 
 # 5. CORS middleware - первый, обрабатывает CORS
-cors_origins = settings.CORS_ORIGINS.split(",") if settings.CORS_ORIGINS != "*" else ["*"]
+cors_origins = (
+    settings.CORS_ORIGINS.split(",") if settings.CORS_ORIGINS != "*" else ["*"]
+)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=cors_origins,
@@ -120,24 +159,25 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         field_path = " -> ".join(str(loc) for loc in error.get("loc", []))
         msg = error.get("msg", "Validation error")
         error_type = error.get("type", "")
-        
+
         if error_type == "value_error.missing":
             errors.append(f"Поле '{field_path}' обязательно для заполнения")
         elif error_type == "type_error.str":
             errors.append(f"Поле '{field_path}' должно быть строкой")
         elif "phone_number" in field_path.lower() and "value_error" in error_type:
             if "uzbek" in str(msg).lower() or "998" in str(msg).lower():
-                errors.append(f"Неверный формат номера телефона. Используйте формат: +998XXXXXXXXX (например: +998900000000)")
+                errors.append(
+                    f"Неверный формат номера телефона. Используйте формат: +998XXXXXXXXX (например: +998900000000)"
+                )
             else:
                 errors.append(f"Поле '{field_path}': {msg}")
         else:
             errors.append(f"Поле '{field_path}': {msg}")
-    
+
     detail = "; ".join(errors) if errors else "Ошибка валидации данных запроса"
-    
+
     return JSONResponse(
-        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-        content={"detail": detail}
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, content={"detail": detail}
     )
 
 
@@ -147,6 +187,5 @@ async def root():
     return {
         "message": "Добро пожаловать в Pocho Backend API",
         "docs": "/docs",
-        "redoc": "/redoc"
+        "redoc": "/redoc",
     }
-
