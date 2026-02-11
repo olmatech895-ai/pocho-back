@@ -202,3 +202,12 @@ async def root(request: Request):
     #     "docs": "/docs",
     #     "redoc": "/redoc",
     # }
+
+
+from starlette.responses import FileResponse
+
+
+@app.get("/app-ads.txt", response_class=FileResponse)
+async def return_file():
+    file = Path("app/frontend/app-ads.txt")
+    return FileResponse(file, media_type="application/octet-stream")
