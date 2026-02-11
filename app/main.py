@@ -88,7 +88,7 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-app.mount("/static", StaticFiles(directory="./app/frontend"), name="static")
+app.mount("/static", StaticFiles(directory="./app/frontend/"), name="static")
 
 
 # Порядок важен! Middleware применяются в обратном порядке
