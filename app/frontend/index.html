@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Primary Meta Tags -->
+  <title>PoCho — Всё в одном приложении | АЗС, Рестораны, Автосервис, Доставка</title>
+  <meta name="title" content="PoCho — Всё в одном приложении | АЗС, Рестораны, Автосервис, Доставка">
+  <meta name="description"
+    content="PoCho — всё для автомобиля и жизни в одном приложении: АЗС, рестораны, автосервис, мойки, зарядки для электромобилей, доставка и AI-помощник. Скачайте бесплатно на iOS и Android.">
+  <meta name="keywords"
+    content="PoCho, мобильное приложение, АЗС, заправки, рестораны, автосервис, доставка, зарядки электромобилей, навигация, карта, AI помощник, iOS, Android, скачать приложение">
+  <meta name="author" content="PoCho">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="language" content="Russian">
+  <meta name="revisit-after" content="7 days">
+  <meta name="rating" content="general">
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://pocho.app/">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pocho.app/">
+  <meta property="og:title" content="PoCho — Всё в одном приложении | АЗС, Рестораны, Автосервис">
+  <meta property="og:description"
+    content="PoCho — всё для автомобиля и жизни в одном приложении: АЗС, рестораны, автосервис, мойки, зарядки для электромобилей, доставка и AI-помощник. Скачайте бесплатно на iOS и Android.">
+  <meta property="og:image" content="https://pocho.app/to-go-logo.png">
+  <meta property="og:image:secure_url" content="https://pocho.app/to-go-logo.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="PoCho — Мобильное приложение для автомобиля и жизни">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:site_name" content="PoCho">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://pocho.app/">
+  <meta name="twitter:title" content="PoCho — Всё в одном приложении | АЗС, Рестораны, Автосервис">
+  <meta name="twitter:description"
+    content="PoCho — всё для автомобиля и жизни в одном приложении: АЗС, рестораны, автосервис, мойки, зарядки для электромобилей, доставка и AI-помощник.">
+  <meta name="twitter:image" content="https://pocho.app/to-go-logo.png">
+  <meta name="twitter:image:alt" content="PoCho — Мобильное приложение для автомобиля и жизни">
+  <meta name="twitter:creator" content="@pocho_app">
+  <meta name="twitter:site" content="@pocho_app">
+
+  <!-- Mobile App Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="PoCho">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="PoCho">
+  <meta name="theme-color" content="#6366f1">
+  <meta name="msapplication-TileColor" content="#6366f1">
+  <meta name="msapplication-config" content="/browserconfig.xml">
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" href="{{ url_for('static', path='to-go-logo.png')}}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', path='to-go-logo.png')}}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', path='to-go-logo.png')}}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', path='to-go-logo.png')}}">
+  <link rel="mask-icon" href="{{ url_for('static', path='to-go-logo.png')}}" color="#6366f1">
+
+  <!-- Preconnect for Performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+
+  <!-- Stylesheets -->
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="{{ url_for('static', path='css/style.css')}}">
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "MobileApplication",
+      "name": "PoCho",
+      "applicationCategory": "LifestyleApplication",
+      "operatingSystem": ["iOS", "Android"],
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "1250"
+      },
+      "description": "PoCho — всё для автомобиля и жизни в одном приложении: АЗС, рестораны, автосервис, мойки, зарядки для электромобилей, доставка и AI-помощник.",
+      "screenshot": "https://pocho.app/to-go-logo.png",
+      "softwareVersion": "1.0",
+      "releaseNotes": "Первая версия приложения с полным функционалом",
+      "downloadUrl": "https://apps.apple.com/app/pocho/idXXXXXXXXX",
+      "softwareHelp": {
+        "@type": "CreativeWork",
+        "url": "https://pocho.app/#faq"
+      }
+    }
+  </script>
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "PoCho",
+      "url": "https://pocho.app",
+      "logo": "https://pocho.app/to-go-logo.png",
+      "description": "PoCho — всё для автомобиля и жизни в одном приложении",
+      "sameAs": [
+        "https://apps.apple.com/app/pocho/idXXXXXXXXX",
+        "https://play.google.com/store/apps/details?id=com.potcho.app"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer support",
+        "availableLanguage": ["Russian", "Uzbek"]
+      }
+    }
+  </script>
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "PoCho",
+      "url": "https://pocho.app",
+      "description": "PoCho — всё для автомобиля и жизни в одном приложении",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://pocho.app/?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+  </script>
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+          "@type": "Question",
+          "name": "Приложение платное?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "PoCho бесплатен для скачивания и использования. Оплачиваются только сами услуги (топливо, еда, сервис и т.д.) по тарифам партнёров."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Как зарегистрироваться?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Введите номер телефона, получите SMS с кодом и введите его в приложении. Пароль не нужен — вход по коду из SMS."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "На каких языках работает приложение?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Сейчас доступны русский и узбекский языки. Переключение в настройках профиля."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Есть ли доставка и как ею пользоваться?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Да. В приложении есть раздел доставки: укажите адреса «откуда» и «куда», оформите заказ и следите за водителем на карте в реальном времени."
+          }
+        }
+      ]
+    }
+  </script>
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "PoCho",
+      "operatingSystem": "iOS, Android",
+      "applicationCategory": "LifestyleApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": "1250"
+      },
+      "description": "PoCho — всё для автомобиля и жизни в одном приложении: АЗС, рестораны, автосервис, мойки, зарядки для электромобилей, доставка и AI-помощник.",
+      "screenshot": "https://pocho.app/to-go-logo.png",
+      "featureList": [
+        "Карта и навигация",
+        "АЗС и топливо",
+        "Рестораны и доставка",
+        "Автосервис и мойки",
+        "Зарядки для электромобилей",
+        "AI-помощник",
+        "Поддержка 24/7"
+      ]
+    }
+  </script>
+</head>
+
+<body>
+  <!-- Cursor glow -->
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <!-- Header -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="/" class="logo" aria-label="PoCho — Главная страница">
+        <img src="{{ url_for('static', path='to-go-logo.png')}}" alt="PoCho — Всё в одном приложении" class="logo-img"
+          width="120" height="40">
+      </a>
+      <nav class="nav">
+        <a href="#features">Возможности</a>
+        <a href="#services">Сервисы</a>
+        <a href="#download">Скачать</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <button class="nav-toggle" id="navToggle" aria-label="Меню">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" itemscope itemtype="https://schema.org/WebPage">
+    <div class="hero-bg">
+      <div class="hero-gradient"></div>
+      <div class="hero-grid"></div>
+      <div class="hero-orb hero-orb-1"></div>
+      <div class="hero-orb hero-orb-2"></div>
+      <div class="hero-orb hero-orb-3"></div>
+    </div>
+    <div class="container hero-inner">
+      <div class="hero-content animate-on-scroll">
+        <span class="hero-badge">Новое приложение 2025</span>
+        <h1 class="hero-title" itemprop="name">
+          Всё для автомобиля<br>
+          <span class="hero-title-accent">и жизни</span> в одном приложении
+        </h1>
+        <p class="hero-desc" itemprop="description">
+          АЗС, рестораны, автосервис, мойки, зарядки для электромобилей, доставка и AI-помощник — один аккаунт, одна
+          карта, один экран.
+        </p>
+        <div class="hero-cta">
+          <a href="#download" class="btn btn-primary">
+            <i class="fa-solid fa-download" aria-hidden="true"></i>
+            Скачать приложение
+          </a>
+          <a href="#features" class="btn btn-ghost">Узнать больше</a>
+        </div>
+      </div>
+      <div class="hero-visual animate-on-scroll" data-delay="200">
+        <div class="phone-mockup">
+          <div class="phone-screen">
+            <div class="phone-app-preview">
+              <div class="phone-app-header">
+                <span class="logo-icon">P</span>
+                <span class="logo-text">PoCho</span>
+              </div>
+              <div class="phone-app-menu">
+                <div class="phone-app-menu-item">
+                  <span class="menu-icon menu-icon-gas"><i class="fa-solid fa-gas-pump" aria-hidden="true"></i></span>
+                  <span>АЗС</span>
+                </div>
+                <div class="phone-app-menu-item">
+                  <span class="menu-icon menu-icon-restaurant"><i class="fa-solid fa-utensils"
+                      aria-hidden="true"></i></span>
+                  <span>Рестораны</span>
+                </div>
+                <div class="phone-app-menu-item">
+                  <span class="menu-icon menu-icon-car"><i class="fa-solid fa-car" aria-hidden="true"></i></span>
+                  <span>Автосервис</span>
+                </div>
+                <div class="phone-app-menu-item">
+                  <span class="menu-icon menu-icon-ev"><i class="fa-solid fa-charging-station"
+                      aria-hidden="true"></i></span>
+                  <span>Зарядки ЭМ</span>
+                </div>
+                <div class="phone-app-menu-item">
+                  <span class="menu-icon menu-icon-delivery"><i class="fa-solid fa-truck-fast"
+                      aria-hidden="true"></i></span>
+                  <span>Доставка</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <span>Листайте вниз</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="stats">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item animate-on-scroll">
+          <span class="stat-value" data-target="1000">0</span>
+          <span class="stat-suffix">+</span>
+          <span class="stat-label">Точек на карте</span>
+        </div>
+        <div class="stat-item animate-on-scroll">
+          <span class="stat-value" data-target="5">0</span>
+          <span class="stat-label">Сервисов в одном приложении</span>
+        </div>
+        <div class="stat-item animate-on-scroll">
+          <span class="stat-value" data-target="24">0</span>
+          <span class="stat-suffix">/7</span>
+          <span class="stat-label">Поддержка и доставка</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="section features" id="features">
+    <div class="container">
+      <div class="section-head animate-on-scroll">
+        <h2 class="section-title">Почему выбирают PoCho</h2>
+        <p class="section-desc">Один аккаунт — доступ ко всем сервисам без переключения между приложениями.</p>
+      </div>
+      <div class="features-grid">
+        <article class="feature-card animate-on-scroll">
+          <div class="feature-icon">
+            <i class="fa-solid fa-map-location-dot" aria-hidden="true"></i>
+          </div>
+          <h3>Карта и навигация</h3>
+          <p>АЗС, зарядки, мойки и сервисы на одной карте. Маршруты и актуальные цены.</p>
+        </article>
+        <article class="feature-card animate-on-scroll">
+          <div class="feature-icon">
+            <i class="fa-solid fa-utensils" aria-hidden="true"></i>
+          </div>
+          <h3>Рестораны и доставка</h3>
+          <p>Меню, бронирование и доставка из любимых заведений. Отслеживание заказа в реальном времени.</p>
+        </article>
+        <article class="feature-card animate-on-scroll">
+          <div class="feature-icon">
+            <i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i>
+          </div>
+          <h3>Автосервис и мойки</h3>
+          <p>Запись в сервисы и мойки, отзывы и рейтинги. Экономия времени и денег.</p>
+        </article>
+        <article class="feature-card animate-on-scroll">
+          <div class="feature-icon">
+            <i class="fa-solid fa-charging-station" aria-hidden="true"></i>
+          </div>
+          <h3>Зарядки для ЭМ</h3>
+          <p>Карта зарядных станций, доступность и типы разъёмов. Планирование поездок на электромобиле.</p>
+        </article>
+        <article class="feature-card animate-on-scroll">
+          <div class="feature-icon">
+            <i class="fa-solid fa-robot" aria-hidden="true"></i>
+          </div>
+          <h3>AI-помощник</h3>
+          <p>Умный помощник подскажет, где заправиться, поесть или отдохнуть по маршруту.</p>
+        </article>
+        <article class="feature-card animate-on-scroll">
+          <div class="feature-icon">
+            <i class="fa-solid fa-headset" aria-hidden="true"></i>
+          </div>
+          <h3>Поддержка 24/7</h3>
+          <p>Чат с поддержкой и тикеты. Помощь на русском и узбекском.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services (app screens) -->
+  <section class="section services" id="services">
+    <div class="container">
+      <div class="section-head animate-on-scroll">
+        <h2 class="section-title">Всё в одном приложении</h2>
+        <p class="section-desc">Один вход по номеру телефона — и вы внутри экосистемы PoCho.</p>
+      </div>
+      <div class="services-list">
+        <div class="service-row">
+          <div class="service-content animate-on-scroll">
+            <span class="service-num">01</span>
+            <h3>АЗС и топливо</h3>
+            <p>Карта заправок, актуальные цены на топливо, адреса и отзывы. Выбирайте лучшую заправку по пути.</p>
+          </div>
+          <div class="service-visual animate-on-scroll" data-delay="100">
+            <div class="service-card service-card-gas">
+              <div class="service-card-illus">
+                <i class="fa-solid fa-gas-pump service-card-icon" aria-hidden="true"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="service-row service-row-reverse">
+          <div class="service-content animate-on-scroll">
+            <span class="service-num">02</span>
+            <h3>Рестораны и кафе</h3>
+            <p>Меню, фото, рейтинги и бронирование. Добавляйте избранное и заказывайте доставку.</p>
+          </div>
+          <div class="service-visual animate-on-scroll" data-delay="100">
+            <div class="service-card service-card-restaurant">
+              <div class="service-card-illus">
+                <i class="fa-solid fa-utensils service-card-icon" aria-hidden="true"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="service-row">
+          <div class="service-content animate-on-scroll">
+            <span class="service-num">03</span>
+            <h3>Автосервис и мойки</h3>
+            <p>Сеть сервисов и моек. Запись онлайн, цены и отзывы. Держите машину в порядке без лишних звонков.</p>
+          </div>
+          <div class="service-visual animate-on-scroll" data-delay="100">
+            <div class="service-card service-card-car">
+              <div class="service-card-illus">
+                <i class="fa-solid fa-car service-card-icon" aria-hidden="true"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="service-row service-row-reverse">
+          <div class="service-content animate-on-scroll">
+            <span class="service-num">04</span>
+            <h3>Зарядки для электромобилей</h3>
+            <p>Карта зарядных станций с типами разъёмов и статусом. Планируйте длинные поездки без стресса.</p>
+          </div>
+          <div class="service-visual animate-on-scroll" data-delay="100">
+            <div class="service-card service-card-ev">
+              <div class="service-card-illus">
+                <i class="fa-solid fa-charging-station service-card-icon" aria-hidden="true"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="service-row">
+          <div class="service-content animate-on-scroll">
+            <span class="service-num">05</span>
+            <h3>Доставка</h3>
+            <p>Заказ доставки с отслеживанием на карте. Водители и клиенты в одном приложении.</p>
+          </div>
+          <div class="service-visual animate-on-scroll" data-delay="100">
+            <div class="service-card service-card-delivery">
+              <div class="service-card-illus">
+                <i class="fa-solid fa-truck-fast service-card-icon" aria-hidden="true"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA / Download -->
+  <section class="section cta" id="download">
+    <div class="cta-bg">
+      <div class="cta-gradient"></div>
+      <div class="cta-orb cta-orb-1"></div>
+      <div class="cta-orb cta-orb-2"></div>
+    </div>
+    <div class="container cta-inner">
+      <div class="cta-content animate-on-scroll">
+        <h2 class="cta-title">Скачайте PoCho бесплатно</h2>
+        <p class="cta-desc">Доступно на iOS и Android. Регистрация по номеру телефона — без паролей и лишних полей.</p>
+        <div class="download-buttons">
+          <a href="https://apps.apple.com/app/pocho/idXXXXXXXXX" class="store-btn store-btn-apple"
+            aria-label="Скачать в App Store" target="_blank" rel="noopener">
+            <span class="store-icon">
+              <i class="fa-brands fa-apple" aria-hidden="true"></i>
+            </span>
+            <span class="store-text"><small>Загрузите в</small> App Store</span>
+          </a>
+          <a href="https://play.google.com/store/apps/details?id=com.potcho.app" class="store-btn store-btn-google"
+            aria-label="Скачать в Google Play" target="_blank" rel="noopener">
+            <span class="store-icon">
+              <i class="fa-brands fa-google-play" aria-hidden="true"></i>
+            </span>
+            <span class="store-text"><small>Доступно в</small> Google Play</span>
+          </a>
+        </div>
+        <p class="cta-note">Бесплатно • Без подписок • Регистрация по номеру телефона</p>
+      </div>
+      <div class="cta-phone animate-on-scroll" data-delay="150">
+        <div class="phone-mockup phone-mockup-small">
+          <div class="phone-screen">
+            <div class="phone-app-preview">
+              <div class="phone-app-header">
+                <span class="logo-icon">P</span>
+                <span class="logo-text">PoCho</span>
+              </div>
+              <div class="phone-app-menu">
+                <div class="phone-app-menu-item">
+                  <span class="menu-icon menu-icon-gas"><i class="fa-solid fa-gas-pump" aria-hidden="true"></i></span>
+                  <span>АЗС</span>
+                </div>
+                <div class="phone-app-menu-item">
+                  <span class="menu-icon menu-icon-restaurant"><i class="fa-solid fa-utensils"
+                      aria-hidden="true"></i></span>
+                  <span>Рестораны</span>
+                </div>
+                <div class="phone-app-menu-item">
+                  <span class="menu-icon menu-icon-car"><i class="fa-solid fa-car" aria-hidden="true"></i></span>
+                  <span>Автосервис</span>
+                </div>
+                <div class="phone-app-menu-item">
+                  <span class="menu-icon menu-icon-ev"><i class="fa-solid fa-charging-station"
+                      aria-hidden="true"></i></span>
+                  <span>Зарядки ЭМ</span>
+                </div>
+                <div class="phone-app-menu-item">
+                  <span class="menu-icon menu-icon-delivery"><i class="fa-solid fa-truck-fast"
+                      aria-hidden="true"></i></span>
+                  <span>Доставка</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section faq" id="faq">
+    <div class="container">
+      <div class="section-head animate-on-scroll">
+        <h2 class="section-title">Частые вопросы</h2>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item animate-on-scroll" aria-expanded="false">
+          <button class="faq-question" type="button">
+            <span>Приложение платное?</span>
+            <span class="faq-icon"></span>
+          </button>
+          <div class="faq-answer">
+            <p>PoCho бесплатен для скачивания и использования. Оплачиваются только сами услуги (топливо, еда, сервис и
+              т.д.) по тарифам партнёров.</p>
+          </div>
+        </div>
+        <div class="faq-item animate-on-scroll" aria-expanded="false">
+          <button class="faq-question" type="button">
+            <span>Как зарегистрироваться?</span>
+            <span class="faq-icon"></span>
+          </button>
+          <div class="faq-answer">
+            <p>Введите номер телефона, получите SMS с кодом и введите его в приложении. Пароль не нужен — вход по коду
+              из SMS.</p>
+          </div>
+        </div>
+        <div class="faq-item animate-on-scroll" aria-expanded="false">
+          <button class="faq-question" type="button">
+            <span>На каких языках работает приложение?</span>
+            <span class="faq-icon"></span>
+          </button>
+          <div class="faq-answer">
+            <p>Сейчас доступны русский и узбекский языки. Переключение в настройках профиля.</p>
+          </div>
+        </div>
+        <div class="faq-item animate-on-scroll" aria-expanded="false">
+          <button class="faq-question" type="button">
+            <span>Есть ли доставка и как ею пользоваться?</span>
+            <span class="faq-icon"></span>
+          </button>
+          <div class="faq-answer">
+            <p>Да. В приложении есть раздел доставки: укажите адреса «откуда» и «куда», оформите заказ и следите за
+              водителем на карте в реальном времени.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer" itemscope itemtype="https://schema.org/WPFooter">
+    <div class="container">
+      <div class="footer-top">
+        <a href="/" class="logo" aria-label="PoCho — Главная страница">
+          <span class="logo-icon" aria-hidden="true">P</span>
+          <span class="logo-text">PoCho</span>
+        </a>
+        <nav class="footer-nav">
+          <a href="#features">Возможности</a>
+          <a href="#services">Сервисы</a>
+          <a href="#download">Скачать</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 PoCho. Все права защищены.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', path='js/main.js')}}"></script>
+</body>
+
+</html>

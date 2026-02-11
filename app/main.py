@@ -68,6 +68,8 @@ from app.core.security_middleware import (
     RequestSizeMiddleware,
     ErrorHandlingMiddleware,
 )
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 
 
 logging.basicConfig(
@@ -85,6 +87,8 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
 )
+
+app.mount("/static", StaticFiles(directory="app/frontend"), name="static")
 
 
 # Порядок важен! Middleware применяются в обратном порядке
@@ -181,11 +185,18 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     )
 
 
-@app.get("/")
-async def root():
+from fastapi.responses import HTMLResponse
+from fastapi import Request
+
+templates = Jinja2Templates(directory="app/frontend")
+
+
+@app.get("/", response_class=HTMLResponse)
+async def root(request: Request):
     """Корневой эндпоинт"""
-    return {
-        "message": "Добро пожаловать в Pocho Backend API",
-        "docs": "/docs",
-        "redoc": "/redoc",
-    }
+    return templates.TemplateResponse(request=request, name="index.html")
+    # return {
+    #     "message": "Добро пожаловать в Pocho Backend API",
+    #     "docs": "/docs",
+    #     "redoc": "/redoc",
+    # }
