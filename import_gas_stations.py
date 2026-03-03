@@ -24,8 +24,7 @@ from app.models.electric_station import ElectricStation, ChargingPoint, Connecto
 # Создаем таблицы если их нет
 Base.metadata.create_all(bind=engine)
 
-# Маппинг типов топлива из CSV в enum
-# Проверяем доступные типы в FuelType
+
 FUEL_TYPE_MAPPING = {
     "АИ-80": FuelType.AI_80,
     "АИ-91": FuelType.AI_91,
@@ -33,7 +32,6 @@ FUEL_TYPE_MAPPING = {
     "АИ-98": FuelType.AI_98,
     "Дизель": FuelType.DIESEL,
     "Газ": FuelType.GAS,
-    # АИ-92, Метан и Пропан могут быть не в модели, пропускаем их или используем ближайший тип
 }
 
 # Маппинг boolean значений из CSV
@@ -110,11 +108,16 @@ def load_csv_data(places_file: str, prices_file: str) -> tuple[Dict, Dict]:
     return places_data, prices_data
 
 
-def import_gas_stations(db: Session, places_data: Dict, prices_data: Dict):
-    """Импорт заправок в базу данных"""
+def import_gas_stations(db: Session, places_data: Dict, prices_data: Dict) -> Dict[str, int]:
+    """Импорт заправок в базу данных.
+
+    Возвращает маппинг Row ID (из togo-places.csv) -> ID заправки в БД.
+    Этот маппинг затем используется для импорта комментариев.
+    """
     imported_count = 0
     skipped_count = 0
     error_count = 0
+    row_id_to_station_id: Dict[str, int] = {}
     
     # Получаем первого админа для created_by_admin_id
     from app.models.user import User
@@ -155,6 +158,8 @@ def import_gas_stations(db: Session, places_data: Dict, prices_data: Dict):
             if existing:
                 print(f"Пропущена заправка '{name}': уже существует (ID: {existing.id})")
                 skipped_count += 1
+                # Сохраняем связь Row ID -> ID существующей заправки
+                row_id_to_station_id[row_id] = existing.id
                 # Обновляем цены для существующей заправки
                 if row_id in prices_data:
                     update_fuel_prices(db, existing.id, prices_data[row_id], admin_id)
@@ -180,6 +185,9 @@ def import_gas_stations(db: Session, places_data: Dict, prices_data: Dict):
             
             db.add(gas_station)
             db.flush()  # Получаем ID
+
+            # Сохраняем связь Row ID -> ID созданной заправки
+            row_id_to_station_id[row_id] = gas_station.id
             
             # Добавляем цены на топливо
             if row_id in prices_data:
@@ -205,6 +213,8 @@ def import_gas_stations(db: Session, places_data: Dict, prices_data: Dict):
     print(f"   - Импортировано: {imported_count}")
     print(f"   - Пропущено: {skipped_count}")
     print(f"   - Ошибок: {error_count}")
+
+    return row_id_to_station_id
 
 
 def add_fuel_prices(db: Session, station_id: int, prices: List[Dict], admin_id: Optional[int]):
@@ -384,30 +394,174 @@ def import_electric_stations(db: Session, places_data: Dict):
     print(f"   - Ошибок: {error_count}")
 
 
+def import_comments(db: Session, comments_file: str, row_id_to_station_id: Dict[str, int]):
+    """Импорт комментариев из CSV в таблицу отзывов (reviews).
+
+    CSV: togo-comments.csv
+    Колонки: User Email, Time, Message, page_Id
+    page_Id соответствует значению '🔒 Row ID' в togo-places.csv.
+    """
+    from app.models.user import User
+    from app.models.gas_station import Review
+
+    imported_count = 0
+    skipped_count = 0
+    error_count = 0
+
+    # Кэш, чтобы не дергать БД для каждого письма
+    email_user_cache: Dict[str, int] = {}
+
+    def get_or_create_user_for_email(email: str) -> int:
+        """Возвращает ID пользователя для email, создавая виртуального при необходимости."""
+        nonlocal email_user_cache
+
+        email = (email or "").strip()
+        cache_key = email or "__empty_email__"
+
+        if cache_key in email_user_cache:
+            return email_user_cache[cache_key]
+
+        user = None
+        if email:
+            user = db.query(User).filter(User.login == email).first()
+
+        if not user:
+            # Генерируем уникальный логин и "телефон" для виртуального пользователя
+            base_login = email or "togo_user"
+            login = base_login
+            suffix = 1
+            while db.query(User).filter(User.login == login).first():
+                suffix += 1
+                login = f"{base_login}_{suffix}"
+
+            phone_number = f"virtual_{login}"
+
+            user = User(
+                phone_number=phone_number,
+                fullname=email or "TOGO User",
+                login=login,
+                is_admin=False,
+            )
+            db.add(user)
+            db.flush()
+
+        email_user_cache[cache_key] = user.id
+        return user.id
+
+    if not Path(comments_file).exists():
+        print(f"Файл с комментариями не найден: {comments_file}")
+        return
+
+    print(f"Загрузка комментариев из: {comments_file}")
+
+    with open(comments_file, "r", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            try:
+                page_id = (row.get("page_Id") or row.get("stationID") or "").strip()
+                if not page_id:
+                    skipped_count += 1
+                    continue
+
+                gas_station_id = row_id_to_station_id.get(page_id)
+                if not gas_station_id:
+                    # Нет соответствующей заправки в БД
+                    skipped_count += 1
+                    continue
+
+                email = (row.get("User Email") or "").strip()
+                message = (row.get("Message") or "").strip()
+                time_str = (row.get("Time") or "").strip()
+
+                if not message:
+                    skipped_count += 1
+                    continue
+
+                user_id = get_or_create_user_for_email(email)
+
+                # Проверяем, есть ли уже отзыв от этого пользователя на эту заправку
+                existing = (
+                    db.query(Review)
+                    .filter(
+                        Review.gas_station_id == gas_station_id,
+                        Review.user_id == user_id,
+                    )
+                    .first()
+                )
+
+                # Собираем текст с сохранением email и времени
+                comment_text = message
+                if email or time_str:
+                    meta_parts = []
+                    if email:
+                        meta_parts.append(f"email: {email}")
+                    if time_str:
+                        meta_parts.append(f"time: {time_str}")
+                    meta = ", ".join(meta_parts)
+                    comment_text = f"{message}\n\n({meta})"
+
+                if existing:
+                    # Если отзыв уже есть, просто дополняем его текст
+                    existing.comment = (existing.comment or "") + "\n\n---\n\n" + comment_text
+                else:
+                    review = Review(
+                        gas_station_id=gas_station_id,
+                        user_id=user_id,
+                        rating=5,  # По умолчанию считаем оценку 5
+                        comment=comment_text,
+                    )
+                    db.add(review)
+
+                imported_count += 1
+                if imported_count % 20 == 0:
+                    db.commit()
+
+            except Exception as e:
+                error_count += 1
+                print(f"Ошибка при импорте комментария: {str(e)}")
+                db.rollback()
+                continue
+
+    db.commit()
+
+    print(f"\nИмпорт комментариев завершен:")
+    print(f"   - Импортировано/обновлено: {imported_count}")
+    print(f"   - Пропущено: {skipped_count}")
+    print(f"   - Ошибок: {error_count}")
+
+
 def main():
     """Основная функция импорта"""
-    places_file = r"c:\Users\User\Downloads\Telegram Desktop\togo-places.csv"
-    prices_file = r"c:\Users\User\Downloads\Telegram Desktop\togp-fuel-price .csv"
+    base_dir = Path(__file__).parent
+    places_file = base_dir / "data" / "togo-places.csv"
+    prices_file = base_dir / "data" / "togp-fuel-price.csv"
+    comments_file = base_dir / "data" / "togo-comments.csv"
     
-    if not Path(places_file).exists():
+    if not places_file.exists():
         print(f"Файл не найден: {places_file}")
         return
     
-    if not Path(prices_file).exists():
+    if not prices_file.exists():
         print(f"Файл не найден: {prices_file}")
         return
     
     print("Загрузка данных из CSV файлов...")
-    places_data, prices_data = load_csv_data(places_file, prices_file)
+    places_data, prices_data = load_csv_data(str(places_file), str(prices_file))
     print(f"Загружено {len(places_data)} мест и {sum(len(prices) for prices in prices_data.values())} цен")
     
     db = SessionLocal()
     try:
         print("\nИмпорт заправок...")
-        import_gas_stations(db, places_data, prices_data)
+        row_id_to_station_id = import_gas_stations(db, places_data, prices_data)
         
         print("\nИмпорт электрозаправок...")
         import_electric_stations(db, places_data)
+
+        if comments_file.exists():
+            print("\nИмпорт комментариев...")
+            import_comments(db, str(comments_file), row_id_to_station_id)
+        else:
+            print(f"\nФайл с комментариями не найден, импорт комментариев пропущен: {comments_file}")
         
         print("\nИмпорт завершен успешно!")
     

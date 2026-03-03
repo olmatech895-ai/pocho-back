@@ -16,13 +16,11 @@ def get_local_ip():
     except Exception:
         return None
 if __name__ == "__main__":
-    # Получаем host и port из переменных окружения или используем значения по умолчанию
     load_dotenv()
 
-    host = os.getenv("HOST", "127.0.0.1")  # По умолчанию localhost для браузера
+    host = os.getenv("HOST", "127.0.0.1")  
     port = int(os.getenv("PORT", 8000))
     
-    # Если установлен HOST=0.0.0.0, используем его для доступа по сети
     if host == "0.0.0.0":
         local_ip = get_local_ip()
         print("\n" + "="*60)

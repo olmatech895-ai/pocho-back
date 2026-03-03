@@ -1,16 +1,11 @@
-"""
-Скрипт для добавления регионов Узбекистана в базу данных
-"""
 import sys
 import io
 from pathlib import Path
 
-# Исправление кодировки для Windows
 if sys.platform == 'win32':
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
-# Добавляем корневую директорию проекта в путь
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
@@ -155,19 +150,16 @@ def add_regions(db: Session):
     updated_count = 0
     
     for region_data in REGIONS_DATA:
-        # Проверяем, существует ли регион
         existing_region = db.query(Region).filter(
             Region.name_ru == region_data["name_ru"]
         ).first()
         
         if existing_region:
-            # Обновляем существующий регион
             for key, value in region_data.items():
                 setattr(existing_region, key, value)
             updated_count += 1
             print(f"Обновлен регион: {region_data['name_ru']}")
         else:
-            # Создаем новый регион
             region = Region(**region_data)
             db.add(region)
             added_count += 1
