@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from fastapi.exceptions import RequestValidationError
 from fastapi.staticfiles import StaticFiles
 from fastapi import status
@@ -108,6 +108,11 @@ for subdir in subdirs:
 
 app.mount("/uploads", StaticFiles(directory=str(upload_dir)), name="uploads")
 
+# Статические файлы лендинга
+landing_dir = Path(__file__).parent.parent / "landing"
+if landing_dir.exists():
+    app.mount("/landing", StaticFiles(directory=str(landing_dir)), name="landing")
+
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
@@ -143,10 +148,17 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 @app.get("/")
 async def root():
-    """Корневой эндпоинт"""
+    """
+    Корневой эндпоинт: отдаем лендинг, если он существует,
+    иначе — простое JSON сообщение.
+    """
+    if landing_dir.exists():
+        index_file = landing_dir / "index.html"
+        if index_file.exists():
+            return FileResponse(index_file)
     return {
         "message": "Добро пожаловать в Pocho Backend API",
         "docs": "/docs",
-        "redoc": "/redoc"
+        "redoc": "/redoc",
     }
 
